@@ -67,6 +67,12 @@ RUN "$CONDA_DIR/envs/$ENV_NAME/bin/python" -m ipykernel install \
 
 USER $NB_UID
 
-RUN jupyter nbextension install --sys-prefix --py nbgrader --overwrite
-RUN jupyter nbextension enable --sys-prefix --py nbgrader
-RUN jupyter serverextension enable --sys-prefix --py nbgrader
+# Enable nbgrader UI
+RUN jupyter nbextension install --sys-prefix --py nbgrader --overwrite && \
+    jupyter nbextension enable --sys-prefix --py nbgrader && \
+    jupyter serverextension enable --sys-prefix --py nbgrader && \
+    \    
+    # Disable nbgrader Validate button in UI
+    jupyter nbextension disable nbgrader/validate_assignment --sys-prefix && \
+    jupyter serverextension disable nbgrader.server_extensions.validate_assignment --sys-prefix
+
